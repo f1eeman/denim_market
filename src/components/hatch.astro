@@ -1,0 +1,23 @@
+---
+interface Props {
+  flip?: boolean
+  class?: string
+}
+
+const { flip = false, class: className, ...attrs } = Astro.props
+---
+
+<div class:list={['hatch', { flip }, className]} aria-hidden="true" {...attrs}>
+</div>
+
+<style>
+  .hatch {
+    background-image: url('../img/hatch.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+
+  .flip {
+    transform: scaleY(-1);
+  }
+</style>
