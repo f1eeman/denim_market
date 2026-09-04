@@ -1,0 +1,54 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import PageBand from '@/components/page-band.astro'
+import ProductGrid from '@/components/product-grid.astro'
+import CategoryCard from '@/components/category-card.astro'
+import { CATEGORIES } from '@/data/shop'
+import { SHOP_LEAD } from '@/data/pages'
+import { TILE_RATIO, TILE_SIZES } from '@/data/grid'
+
+const title = 'All categories — Nîmes'
+const description =
+  'Every Nîmes category in one place: jeans, shirts, jackets and overalls.'
+---
+
+<Layout {title} {description}>
+  <PageBand id="shop" title="All categories" />
+
+  <section class="section" aria-labelledby="shop-title">
+    <div class="container inner">
+      <p class="lead">{SHOP_LEAD}</p>
+
+      <ProductGrid reveal={false} scene={false} class="grid-flush">
+        {
+          CATEGORIES.map((category) => (
+            <li>
+              <CategoryCard
+                name={category.name}
+                photo={category.photo}
+                href={category.href}
+                sizes={TILE_SIZES}
+                ratio={TILE_RATIO}
+              />
+            </li>
+          ))
+        }
+      </ProductGrid>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .inner {
+    display: grid;
+    gap: var(--block-gap);
+  }
+
+  .lead {
+    max-inline-size: 60ch;
+  }
+
+  .inner :global(.grid-flush) {
+    margin-block-start: 0;
+  }
+</style>
