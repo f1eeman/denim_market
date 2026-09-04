@@ -1,0 +1,38 @@
+---
+import SectionHead from '@/components/section-head.astro'
+import ProductGrid from '@/components/product-grid.astro'
+import ProductCard from '@/components/product-card.astro'
+import { BESTSELLERS } from '@/data/shop'
+import { TILE_RATIO, TILE_SIZES } from '@/data/grid'
+---
+
+<section
+  class="section"
+  id="bestsellers"
+  data-region
+  aria-labelledby="bestsellers-title"
+>
+  <div class="container">
+    <SectionHead
+      id="bestsellers"
+      title="Bestsellers"
+      more={{ label: 'View all', href: '/catalog' }}
+    />
+    <ProductGrid>
+      {
+        BESTSELLERS.map((tile) => (
+          <li>
+            <ProductCard
+              name={tile.name}
+              price={tile.price}
+              photo={tile.photo}
+              href="/product"
+              sizes={TILE_SIZES}
+              ratio={TILE_RATIO}
+            />
+          </li>
+        ))
+      }
+    </ProductGrid>
+  </div>
+</section>

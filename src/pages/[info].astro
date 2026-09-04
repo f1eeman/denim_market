@@ -1,0 +1,44 @@
+---
+import type { GetStaticPaths } from 'astro'
+
+import Layout from '@/layouts/Layout.astro'
+import PageBand from '@/components/page-band.astro'
+import PageProse from '@/components/page-prose.astro'
+import { INFO_PAGES, type InfoPage } from '@/data/pages'
+
+export const getStaticPaths = (() =>
+  INFO_PAGES.map((page) => ({
+    params: { info: page.slug },
+    props: { page },
+  }))) satisfies GetStaticPaths
+
+interface Props {
+  page: InfoPage
+}
+
+const { page } = Astro.props
+
+const BAND = 'info'
+---
+
+<Layout title={page.title} description={page.description}>
+  <PageBand id={BAND} title={page.heading} />
+
+  <section class="section" aria-labelledby={`${BAND}-title`}>
+    <div class="container inner">
+      <p class="lead">{page.lead}</p>
+      <PageProse blocks={page.blocks} />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .inner {
+    display: grid;
+    gap: var(--region-gap);
+  }
+
+  .lead {
+    max-inline-size: 60ch;
+  }
+</style>

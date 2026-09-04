@@ -1,0 +1,86 @@
+---
+import type { Block } from '@/data/pages'
+
+interface Props {
+  blocks: Block[]
+}
+
+const { blocks } = Astro.props
+---
+
+<div class="prose">
+  {
+    blocks.map((block) => (
+      <section class="block">
+        <h2 class="heading">{block.heading}</h2>
+
+        {block.paragraphs?.map((paragraph) => (
+          <p class="text">{paragraph}</p>
+        ))}
+
+        {block.rows !== undefined && (
+          <dl class="terms">
+            {block.rows.map((row) => (
+              <div class="row">
+                <dt class="term">{row.term}</dt>
+                <dd class="value">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .prose {
+    display: grid;
+    gap: var(--region-gap);
+  }
+
+  .block {
+    display: grid;
+    gap: 16px;
+    justify-items: start;
+  }
+
+  .heading {
+    font-weight: 700;
+    font-size: var(--text-card);
+    line-height: var(--line-heading);
+  }
+
+  .text {
+    max-inline-size: 60ch;
+  }
+
+  .terms {
+    display: grid;
+    gap: 12px;
+    inline-size: 100%;
+    max-inline-size: 60ch;
+    margin-block-start: 8px;
+  }
+
+  .row {
+    display: grid;
+    gap: 2px;
+  }
+
+  .term {
+    font-weight: 500;
+  }
+
+  .value {
+    color: var(--color-text-muted);
+  }
+
+  @media (width >= 665px) {
+    .row {
+      grid-template-columns: minmax(0, 12em) minmax(0, 1fr);
+      gap: 24px;
+      align-items: baseline;
+    }
+  }
+</style>

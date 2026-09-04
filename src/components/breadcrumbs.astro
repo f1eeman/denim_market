@@ -1,0 +1,78 @@
+---
+export interface Crumb {
+  label: string
+  href: string | null
+}
+
+interface Props {
+  crumbs: Crumb[]
+}
+
+const { crumbs } = Astro.props
+
+const last = crumbs.length - 1
+---
+
+<nav aria-label="Breadcrumb">
+  <ol class="crumbs">
+    {
+      crumbs.map((crumb, index) => (
+        <li class="crumb">
+          {crumb.href !== null ? (
+            <a class="crumb-link" href={crumb.href}>
+              {crumb.label}
+            </a>
+          ) : index === last ? (
+            <span class="current" aria-current="page">
+              {crumb.label}
+            </span>
+          ) : (
+            <span class="plain">{crumb.label}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+
+  .crumb + .crumb::before {
+    content: '/';
+    margin-inline-end: 10px;
+  }
+
+  .crumb-link {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: color 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .crumb-link:hover {
+      color: var(--color-text);
+    }
+  }
+
+  .crumb-link:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 3px;
+  }
+
+  .current {
+    color: var(--color-text);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .crumb-link {
+      transition: none;
+    }
+  }
+</style>

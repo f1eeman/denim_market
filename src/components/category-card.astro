@@ -1,0 +1,95 @@
+---
+import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
+
+interface Props {
+  name: string
+  photo: ImageMetadata
+  href: string
+  sizes: string
+  ratio: string
+}
+
+const { name, photo, href, sizes, ratio } = Astro.props
+---
+
+<a class="tile" {href}>
+  <span class="frame" style={{ aspectRatio: ratio }}>
+    <Image
+      class="photo"
+      src={photo}
+      alt={name}
+      widths={[240, 360, 540]}
+      {sizes}
+    />
+    <span class="wipe" data-wipe aria-hidden="true"></span>
+  </span>
+  <span class="name">{name}</span>
+</a>
+
+<style>
+  .tile {
+    display: grid;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .frame {
+    position: relative;
+    display: block;
+    overflow: hidden;
+  }
+
+  .wipe {
+    position: absolute;
+    inset: -50%;
+    display: none;
+    background-color: var(--color-bg);
+    pointer-events: none;
+  }
+
+  .photo {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transition: transform 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  .name {
+    margin-block-start: 20px;
+    font-weight: 500;
+  }
+
+  .tile:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 4px;
+  }
+
+  .tile:active .photo {
+    transform: scale(1.01);
+    transition-duration: 90ms;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .tile:hover .photo {
+      transform: scale(1.03);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo {
+      transition: none;
+    }
+
+    .tile:active .photo {
+      transform: none;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .tile:hover .photo {
+        transform: none;
+      }
+    }
+  }
+</style>

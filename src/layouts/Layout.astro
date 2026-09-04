@@ -9,38 +9,68 @@ import '@/styles/index.css'
 interface Props {
   title: string
   description: string
+  robots?: string | undefined
 }
 
-const { title, description } = Astro.props
+const { title, description, robots } = Astro.props
 ---
 
 <!doctype html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <Seo {title} {description} />
-    <Font
-      cssVariable="--font-open-sans"
-      preload={[{ weight: 400 }, { weight: 600 }, { weight: 700 }]}
-    />
+    <Seo {title} {description} {robots} />
+    <Font cssVariable="--font-work-sans" preload />
+    <Font cssVariable="--font-anton" preload />
   </head>
   <body>
+    <a class="skip" href="#content">Skip to content</a>
     <Header />
-    <main>
+    <main id="content">
       <slot />
     </main>
     <Footer />
     <script>
+      import { initMenu } from '@/scripts/menu'
+      import { initHeaderSearch } from '@/scripts/header-search'
+      import { initCart } from '@/scripts/cart'
+      import { initCatalog } from '@/scripts/catalog'
+      import { initProduct } from '@/scripts/product'
       import { initReveal } from '@/scripts/reveal'
       import { initParallax } from '@/scripts/parallax'
-      import { initRequestForm } from '@/scripts/request-form'
+      import { initScenes } from '@/scripts/scenes'
 
+      initMenu()
+      initHeaderSearch()
+      initCart()
+      initCatalog()
+      initProduct()
       initReveal()
       initParallax()
-      initRequestForm()
+      initScenes()
     </script>
+
+    <style>
+      .skip {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 50%;
+        z-index: 20;
+        padding: 12px 24px;
+        background-color: var(--color-surface-inverse);
+        color: var(--color-text-inverse);
+        font-weight: 500;
+        transform: translate(-50%, -101%);
+      }
+
+      .skip:focus-visible {
+        outline: 2px solid var(--color-text-inverse);
+        outline-offset: -6px;
+        transform: translate(-50%, 0);
+      }
+    </style>
   </body>
 </html>

@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets'
+import SectionHead from '@/components/section-head.astro'
+import ProductGrid from '@/components/product-grid.astro'
+import { CATEGORIES } from '@/data/shop'
+import { TILE_RATIO, TILE_SIZES } from '@/data/grid'
+---
+
+<section
+  class="section"
+  id="categories"
+  data-region
+  aria-labelledby="categories-title"
+>
+  <div class="container">
+    <SectionHead
+      id="categories"
+      title="Shop by category"
+      more={{ label: 'View all', href: '/catalog' }}
+    />
+    <ProductGrid>
+      {
+        CATEGORIES.map((category) => (
+          <li>
+            <a class="tile" href={category.href}>
+              <span class="frame" style={{ aspectRatio: TILE_RATIO }}>
+                <Image
+                  class="photo"
+                  src={category.photo}
+                  alt={category.name}
+                  widths={[240, 360, 540]}
+                  sizes={TILE_SIZES}
+                />
+                <span class="wipe" data-wipe aria-hidden="true" />
+              </span>
+              <span class="name">{category.name}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ProductGrid>
+  </div>
+</section>
+
+<style>
+  .tile {
+    display: grid;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .frame {
+    position: relative;
+    display: block;
+    overflow: hidden;
+  }
+
+  .wipe {
+    position: absolute;
+    inset: -50%;
+    display: none;
+    background-color: var(--color-bg);
+    pointer-events: none;
+  }
+
+  .photo {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transition: transform 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  .name {
+    margin-block-start: 20px;
+    font-weight: 500;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .tile:hover .photo {
+      transform: scale(1.03);
+    }
+  }
+
+  .tile:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 4px;
+  }
+
+  .tile:active .photo {
+    transform: scale(1.01);
+    transition-duration: 90ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo {
+      transition: none;
+    }
+
+    .tile:active .photo {
+      transform: none;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .tile:hover .photo {
+        transform: none;
+      }
+    }
+  }
+</style>

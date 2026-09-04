@@ -1,0 +1,126 @@
+---
+import { Image } from 'astro:assets'
+import type { GetStaticPaths } from 'astro'
+
+import Layout from '@/layouts/Layout.astro'
+import PageBand from '@/components/page-band.astro'
+import PageProse from '@/components/page-prose.astro'
+import ProductGrid from '@/components/product-grid.astro'
+import ProductCard from '@/components/product-card.astro'
+import { CATEGORIES, tilesByName, type Category } from '@/data/shop'
+import { CATEGORY_PROSE } from '@/data/pages'
+import { FIGURE_SIZES, TILE_RATIO, TILE_SIZES } from '@/data/grid'
+
+export const getStaticPaths = (() =>
+  CATEGORIES.filter((category) => category.href.startsWith('/shop/')).map(
+    (category) => ({
+      params: { category: category.slug },
+      props: { category },
+    }),
+  )) satisfies GetStaticPaths
+
+interface Props {
+  category: Category
+}
+
+const { category } = Astro.props
+
+const tiles = tilesByName(category.name)
+const prose = CATEGORY_PROSE[category.slug]
+
+const BAND = 'category'
+
+const title = `${category.name} — Nîmes`
+const description =
+  prose === undefined
+    ? `${category.name} from the Nîmes collections — ${String(tiles.length)} cuts in the shop.`
+    : `${category.name} at Nîmes: ${prose.lead}`
+---
+
+<Layout {title} {description}>
+  <PageBand
+    id={BAND}
+    title={category.name}
+    crumbs={[
+      { label: 'All categories', href: '/shop' },
+      { label: category.name, href: null },
+    ]}
+  />
+
+  <section class="section" aria-labelledby={`${BAND}-title`}>
+    <div class="container inner">
+      {
+        prose === undefined ? (
+          <ProductGrid reveal={false} scene={false} class="grid-flush">
+            {tiles.map((tile) => (
+              <li>
+                <ProductCard
+                  name={tile.name}
+                  price={tile.price}
+                  photo={tile.photo}
+                  href="/product"
+                  sizes={TILE_SIZES}
+                  ratio={TILE_RATIO}
+                />
+              </li>
+            ))}
+          </ProductGrid>
+        ) : (
+          <>
+            <p class="lead">{prose.lead}</p>
+
+            <figure class="figure">
+              <span class="frame" style={{ aspectRatio: TILE_RATIO }}>
+                <Image
+                  class="photo"
+                  src={category.photo}
+                  alt={`${category.name} in cotton denim`}
+                  widths={[240, 360, 540]}
+                  sizes={FIGURE_SIZES}
+                />
+              </span>
+            </figure>
+
+            <PageProse blocks={prose.blocks} />
+          </>
+        )
+      }
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .inner {
+    display: grid;
+    gap: var(--block-gap);
+  }
+
+  .inner :global(.grid-flush) {
+    margin-block-start: 0;
+  }
+
+  .lead {
+    max-inline-size: 60ch;
+  }
+
+  .figure {
+    inline-size: 100%;
+    max-inline-size: 400px;
+  }
+
+  .frame {
+    display: block;
+    overflow: hidden;
+  }
+
+  .photo {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .inner :global(.prose) {
+    margin-block-start: calc(var(--region-gap) - var(--block-gap));
+  }
+</style>

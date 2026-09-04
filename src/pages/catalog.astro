@@ -1,0 +1,14 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import CatalogHero from '@/components/catalog-hero.astro'
+import CatalogGrid from '@/components/catalog-grid.astro'
+
+const title = 'Denim Collection Fall 2019 — Nîmes'
+const description =
+  'Woman’s denim jackets from the Fall 2019 collection: 45 items, filter by price and load more as you browse.'
+---
+
+<Layout {title} {description}>
+  <CatalogHero />
+  <CatalogGrid />
+</Layout>

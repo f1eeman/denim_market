@@ -1,0 +1,58 @@
+---
+import Breadcrumbs, { type Crumb } from '@/components/breadcrumbs.astro'
+
+interface Props {
+  id: string
+  title: string
+  crumbs?: Crumb[]
+}
+
+const { id, title, crumbs } = Astro.props
+---
+
+<section class="band section" data-band aria-labelledby={`${id}-title`}>
+  <div class="container inner">
+    {crumbs !== undefined && <Breadcrumbs {crumbs} />}
+    <h1 class="title" id={`${id}-title`}>{title}</h1>
+  </div>
+</section>
+
+<style>
+  .band {
+    background-color: var(--color-surface-muted);
+  }
+
+  .inner {
+    padding-block: 32px;
+  }
+
+  .title {
+    font-weight: 700;
+    font-size: var(--text-section);
+    line-height: var(--line-heading);
+  }
+
+  .inner > .title:not(:first-child) {
+    margin-block-start: 26px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .title {
+      animation: band-title-rise var(--motion-tick) var(--motion-ease) backwards;
+      animation-delay: var(--motion-step);
+    }
+  }
+
+  @keyframes band-title-rise {
+    from {
+      transform: translateY(var(--motion-shift));
+      opacity: 0;
+    }
+  }
+
+  @media (width >= 1168px) {
+    .inner {
+      padding-block: 69px;
+    }
+  }
+</style>

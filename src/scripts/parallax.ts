@@ -1,4 +1,4 @@
-import { gsap, MOTION, mm } from '@/scripts/gsap'
+import { DESKTOP, gsap, MOTION, mm } from '@/scripts/gsap'
 
 const DEFAULT_DEPTH = 0.3
 
@@ -7,7 +7,7 @@ export function initParallax(): void {
 
   if (layers.length === 0) return
 
-  mm.add(`(width >= 1024px) and ${MOTION}`, () => {
+  mm.add(`${DESKTOP} and ${MOTION}`, () => {
     for (const layer of layers) {
       const depth = Number(layer.dataset['parallax']) || DEFAULT_DEPTH
       const scene =

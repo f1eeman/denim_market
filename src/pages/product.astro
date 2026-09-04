@@ -1,0 +1,14 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import ProductDetail from '@/components/product-detail.astro'
+import Related from '@/components/related.astro'
+import { PRODUCT } from '@/data/shop'
+
+const title = `${PRODUCT.name} — Nîmes`
+const description = PRODUCT.description
+---
+
+<Layout {title} {description}>
+  <ProductDetail />
+  <Related />
+</Layout>

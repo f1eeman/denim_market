@@ -84,6 +84,11 @@ const byQuery = (
   return scopes
 }
 
+const shownChildren = (block: HTMLElement): Element[] =>
+  Array.from(block.children).filter(
+    (child) => !(child instanceof HTMLElement) || !child.hidden,
+  )
+
 const reveal = (block: HTMLElement, mode: Mode): void => {
   const direction = block.dataset['reveal']
   const from = offsetsOf(BASE.shift)[isDirection(direction) ? direction : 'up']
@@ -98,7 +103,7 @@ const reveal = (block: HTMLElement, mode: Mode): void => {
   if (mode === 'each') {
     const start = own ?? BASE.start
 
-    for (const child of Array.from(block.children)) {
+    for (const child of shownChildren(block)) {
       gsap.from(child, {
         ...motion,
         scrollTrigger: { trigger: child, start, once: true },
@@ -109,7 +114,11 @@ const reveal = (block: HTMLElement, mode: Mode): void => {
   }
 
   if (mode === 'stagger') {
-    gsap.from(Array.from(block.children), {
+    const children = shownChildren(block)
+
+    if (children.length === 0) return
+
+    gsap.from(children, {
       ...motion,
       stagger: Number(block.dataset['revealStagger']) || DEFAULT_STAGGER,
       scrollTrigger: {
