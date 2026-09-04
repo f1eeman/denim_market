@@ -8,10 +8,10 @@ html {
 }
 
 body {
-  font-family: var(--font-open-sans);
+  font-family: var(--font-work-sans);
   font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--text-body);
+  line-height: normal;
   color: var(--color-text);
   background-color: var(--color-bg);
 }
@@ -31,12 +31,13 @@ body {
   margin-block-start: var(--region-gap);
 }
 
+.section[data-band] + .section,
 .section:not([data-band]):has(+ .section[data-band]) {
-  margin-block-end: var(--region-gap);
+  margin-block-start: var(--band-gap);
 }
 
 main > .section:last-child {
-  margin-block-end: var(--region-gap);
+  margin-block-end: var(--band-gap);
 }
 
 .visually-hidden:not(:focus),
