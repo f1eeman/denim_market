@@ -1,0 +1,86 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import PageBand from '@/components/page-band.astro'
+import { SITE_LINKS } from '@/data/pages'
+
+const title = 'Sitemap — Nîmes'
+const description = 'Every page of the Nîmes store, grouped and linked.'
+---
+
+<Layout {title} {description}>
+  <PageBand id="sitemap" title="Sitemap" />
+
+  <section class="section" aria-labelledby="sitemap-title">
+    <div class="container inner">
+      {
+        SITE_LINKS.map((group) => (
+          <div class="group">
+            <h2 class="heading">{group.heading}</h2>
+            <ul class="links">
+              {group.links.map((link) => (
+                <li class="row">
+                  <a class="link" href={link.href}>
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .inner {
+    display: grid;
+    gap: var(--region-gap);
+  }
+
+  .heading {
+    font-weight: 700;
+    font-size: var(--text-card);
+    line-height: var(--line-heading);
+  }
+
+  .links {
+    display: grid;
+    gap: 4px;
+    margin-block-start: var(--block-gap);
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    align-items: baseline;
+  }
+
+  .link {
+    position: relative;
+    display: block;
+    padding-block: 10px;
+    font-weight: 500;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: color 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  .link:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 3px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .link:hover {
+      color: var(--color-text-muted);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .link {
+      transition: none;
+    }
+  }
+</style>

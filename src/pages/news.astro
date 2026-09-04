@@ -1,0 +1,52 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import PageBand from '@/components/page-band.astro'
+import { NEWS } from '@/data/shop'
+
+const title = `${NEWS.title} — Nîmes`
+const description = NEWS.lead
+
+const BAND = 'article'
+---
+
+<Layout {title} {description}>
+  <PageBand id={BAND} title={NEWS.title} />
+
+  <section class="section" aria-labelledby={`${BAND}-title`}>
+    <div class="container inner">
+      <time class="date" datetime={NEWS.dateTime}>{NEWS.date}</time>
+      <p class="lead">{NEWS.lead}</p>
+
+      <div class="body">
+        {NEWS.body.map((paragraph) => <p class="text">{paragraph}</p>)}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .inner {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+
+  .date {
+    color: #000;
+  }
+
+  .lead {
+    max-inline-size: 60ch;
+    font-weight: 500;
+  }
+
+  .body {
+    display: grid;
+    gap: 20px;
+    margin-block-start: 20px;
+  }
+
+  .text {
+    max-inline-size: 60ch;
+  }
+</style>

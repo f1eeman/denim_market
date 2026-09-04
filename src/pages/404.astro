@@ -1,0 +1,79 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import PageBand from '@/components/page-band.astro'
+import { NOINDEX } from '@/data/pages'
+
+const title = 'Page not found — Nîmes'
+const description = 'This address does not exist at Nîmes.'
+
+const EXITS = [
+  { label: 'Home', href: '/' },
+  { label: 'All categories', href: '/shop' },
+  { label: 'Denim Collection Fall 2019', href: '/catalog' },
+  { label: 'Sitemap', href: '/sitemap' },
+]
+---
+
+<Layout {title} {description} robots={NOINDEX}>
+  <PageBand id="missing" title="Page not found" />
+
+  <section class="section" aria-labelledby="missing-title">
+    <div class="container inner">
+      <p class="lead">This address does not exist. Try one of these instead.</p>
+
+      <ul class="exits">
+        {
+          EXITS.map((exit) => (
+            <li>
+              <a class="exit" href={exit.href}>
+                {exit.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .inner {
+    display: grid;
+    gap: var(--block-gap);
+    justify-items: start;
+  }
+
+  .exits {
+    display: grid;
+    gap: 4px;
+  }
+
+  .exit {
+    display: block;
+    padding-block: 10px;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: color 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  .exit:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 3px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .exit:hover {
+      color: var(--color-text-muted);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .exit {
+      transition: none;
+    }
+  }
+</style>
