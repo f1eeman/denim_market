@@ -19,6 +19,14 @@ export default defineConfig({
         viewport: { width: 1440, height: 900 },
       },
     },
+    {
+      name: 'short',
+      testMatch: /motion\.spec\.ts/,
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 844, height: 390 },
+      },
+    },
   ],
   webServer: {
     command: `yarn build && yarn preview --port ${String(PORT)}`,

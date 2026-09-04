@@ -9,7 +9,7 @@ const menuOf = (page: Page) => page.locator('[data-menu]')
 const toggleOf = (page: Page) => page.locator('[data-menu-toggle]')
 const panelOf = (page: Page) => page.locator('[data-menu] nav')
 const linkOf = (page: Page) =>
-  menuOf(page).getByRole('link', { name: 'Заявка' })
+  menuOf(page).getByRole('link', { name: 'Man', exact: true })
 
 test.describe('мобильное меню', () => {
   test.beforeEach(async ({ page }) => {
@@ -20,7 +20,7 @@ test.describe('мобильное меню', () => {
   test('закрыто при загрузке', async ({ page }) => {
     await expect(menuOf(page)).not.toHaveAttribute('open')
     await expect(linkOf(page)).toBeHidden()
-    await expect(toggleOf(page)).toHaveAccessibleName('Открыть меню')
+    await expect(toggleOf(page)).toHaveAccessibleName('Open menu')
   })
 
   test('бургер раскрывает гармошку и меняет доступное имя', async ({
@@ -30,7 +30,7 @@ test.describe('мобильное меню', () => {
 
     await expect(menuOf(page)).toHaveAttribute('open', '')
     await expect(linkOf(page)).toBeVisible()
-    await expect(toggleOf(page)).toHaveAccessibleName('Закрыть меню')
+    await expect(toggleOf(page)).toHaveAccessibleName('Close menu')
   })
 
   test('гармошка не двигает первый экран', async ({ page }) => {
@@ -50,7 +50,7 @@ test.describe('мобильное меню', () => {
 
     await expect(menuOf(page)).not.toHaveAttribute('open')
     await expect(linkOf(page)).toBeHidden()
-    await expect(toggleOf(page)).toHaveAccessibleName('Открыть меню')
+    await expect(toggleOf(page)).toHaveAccessibleName('Open menu')
   })
 
   test('Esc закрывает меню и возвращает фокус на бургер', async ({ page }) => {
@@ -61,12 +61,14 @@ test.describe('мобильное меню', () => {
     await expect(toggleOf(page)).toBeFocused()
   })
 
-  test('клик по якорю закрывает меню', async ({ page }) => {
+  test('клик по пункту уводит на раздел и оставляет меню закрытым', async ({
+    page,
+  }) => {
     await toggleOf(page).click()
     await linkOf(page).click()
 
+    await expect(page).toHaveURL(/\/shop\/?$/)
     await expect(menuOf(page)).not.toHaveAttribute('open')
-    expect(new URL(page.url()).hash).toBe('#request')
   })
 
   test('клик мимо панели закрывает меню', async ({ page }) => {
