@@ -1,0 +1,131 @@
+---
+import { Image } from 'astro:assets'
+import SectionHead from '@/components/section-head.astro'
+import Button from '@/components/button.astro'
+import Hatch from '@/components/hatch.astro'
+import { NEWS } from '@/data/shop'
+---
+
+<section class="section" id="news" data-region aria-labelledby="news-title">
+  <div class="container">
+    <SectionHead
+      id="news"
+      title="News"
+      more={{ label: 'View all', href: NEWS.href }}
+    />
+
+    <div class="body" data-reveal data-reveal-below="1168" data-scene-diptych>
+      <div class="cover">
+        <Image
+          class="cover-photo"
+          src={NEWS.cover}
+          alt="Two models in denim outfits"
+          widths={[700, 1400]}
+          sizes="(width >= 1366px) 700px, (width >= 1168px) 59.829vw, 85.652vw"
+        />
+        <span class="wipe" data-wipe aria-hidden="true"></span>
+      </div>
+
+      <div class="side">
+        <Hatch flip class="side-pattern" data-scene-pattern />
+        <article class="card" data-scene-card>
+          <h3 class="card-title">{NEWS.title}</h3>
+          <time class="date" datetime={NEWS.dateTime}>{NEWS.date}</time>
+          <p class="excerpt">{NEWS.excerpt}</p>
+          <Button as="a" href={NEWS.href} class="action">Read more ...</Button>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .body {
+    display: grid;
+    gap: var(--grid-gap);
+    margin-block-start: var(--block-gap);
+  }
+
+  .cover {
+    position: relative;
+    aspect-ratio: 700 / 370;
+    overflow: hidden;
+  }
+
+  .wipe {
+    position: absolute;
+    inset: -50%;
+    display: none;
+    background-color: var(--color-bg);
+    pointer-events: none;
+  }
+
+  .cover-photo {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .side {
+    position: relative;
+  }
+
+  .side-pattern {
+    position: absolute;
+    inset: 0;
+  }
+
+  .card {
+    position: relative;
+    margin-block: 24px;
+    margin-inline-end: 24px;
+    padding: 40px 24px 28px;
+    background-color: var(--color-surface-muted);
+  }
+
+  .card-title {
+    font-weight: 700;
+    font-size: var(--text-card);
+    line-height: var(--line-heading);
+  }
+
+  .date {
+    display: block;
+    margin-block-start: 20px;
+    color: #000;
+  }
+
+  .excerpt {
+    margin-block-start: 12px;
+    color: var(--color-text-muted);
+  }
+
+  .action {
+    margin-block-start: 23px;
+  }
+
+  @media (width >= 665px) {
+    .card {
+      padding: 54px 43px 28px;
+    }
+
+    .date {
+      margin-block-start: 29px;
+    }
+  }
+
+  @media (width >= 1168px) {
+    .body {
+      grid-template-columns: 700fr 470fr;
+      align-items: start;
+      gap: 0;
+    }
+
+    .card {
+      max-inline-size: 400px;
+      margin-block: 31px 34px;
+      margin-inline-end: 0;
+    }
+  }
+</style>
