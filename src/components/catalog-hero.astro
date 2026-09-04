@@ -1,0 +1,141 @@
+---
+import { Image } from 'astro:assets'
+import Breadcrumbs from '@/components/breadcrumbs.astro'
+import Hatch from '@/components/hatch.astro'
+import cover from '@/img/catalog-cover.jpg'
+import { BREADCRUMBS, COLLECTION_TITLE } from '@/data/catalog'
+---
+
+<section
+  class="hero section"
+  id="collection"
+  data-band
+  aria-labelledby="collection-title"
+>
+  <div class="container inner">
+    <div class="text">
+      <Breadcrumbs crumbs={BREADCRUMBS} />
+
+      <h1 class="title" id="collection-title">{COLLECTION_TITLE}</h1>
+    </div>
+
+    <div class="stage">
+      <Hatch class="pattern-back" />
+      <Hatch class="pattern-front" />
+      <Image
+        class="cover"
+        src={cover}
+        alt="Denim jacket with a hand-painted slogan"
+        widths={[299, 598]}
+        sizes="(width >= 1366px) 299px, (width >= 1168px) 21.882vw, min(299px, 71.245vw)"
+        loading="eager"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    background-color: var(--color-surface-muted);
+  }
+
+  .inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-block: 32px 0;
+  }
+
+  .title {
+    margin-block-start: 26px;
+    font-weight: 700;
+    font-size: var(--text-section);
+    line-height: var(--line-heading);
+  }
+
+  .stage {
+    position: relative;
+    inline-size: 100%;
+    max-inline-size: 359px;
+    margin-block-start: 32px;
+    aspect-ratio: 359 / 260;
+  }
+
+  .pattern-back {
+    position: absolute;
+    inset-block-start: 48.077%;
+    inset-inline-start: 0;
+    inline-size: 49.582%;
+    block-size: 51.923%;
+  }
+
+  .pattern-front {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    inline-size: 64.624%;
+    block-size: 67.692%;
+  }
+
+  .cover {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 8.357%;
+    inline-size: 83.287%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .title {
+      animation: band-rise var(--motion-tick) var(--motion-ease) backwards;
+      animation-delay: var(--motion-step);
+    }
+
+    .pattern-back,
+    .pattern-front {
+      animation: band-fade var(--motion-tick) var(--motion-ease) backwards;
+    }
+
+    .pattern-front {
+      animation-delay: var(--motion-step);
+    }
+  }
+
+  @keyframes band-rise {
+    from {
+      transform: translateY(var(--motion-shift));
+      opacity: 0;
+    }
+  }
+
+  @keyframes band-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (width >= 1168px) {
+    .inner {
+      flex-direction: row;
+      align-items: stretch;
+      padding-block: 0;
+    }
+
+    .text {
+      flex: 0 0 371px;
+      padding-block-start: 69px;
+      padding-inline-end: 57px;
+    }
+
+    .stage {
+      flex: none;
+      inline-size: 359px;
+      max-inline-size: none;
+      margin-block-start: 0;
+      margin-inline-end: 240px;
+      block-size: 260px;
+      aspect-ratio: auto;
+    }
+  }
+</style>

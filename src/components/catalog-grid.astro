@@ -1,0 +1,263 @@
+---
+import ProductGrid from '@/components/product-grid.astro'
+import ProductCard from '@/components/product-card.astro'
+import Button from '@/components/button.astro'
+import Chevron from '@/img/icons/chevron.svg'
+import { CATALOG, PAGE_SIZE, PRICE_BANDS, TOTAL } from '@/data/catalog'
+import { CATALOG_RATIO, CATALOG_SIZES } from '@/data/grid'
+---
+
+<section class="section" id="items" aria-labelledby="items-title">
+  <div class="container">
+    <h2 class="visually-hidden" id="items-title">Jackets</h2>
+
+    <div class="filter" data-filter>
+      <button
+        class="control"
+        type="button"
+        data-filter-toggle
+        aria-expanded="false"
+        aria-controls="filter-options"
+      >
+        <span class="control-label" data-filter-label>Filter by</span>
+        <Chevron class="chevron" width="17" height="10" aria-hidden="true" />
+      </button>
+
+      <ul class="options" id="filter-options" data-filter-options hidden>
+        {
+          PRICE_BANDS.map((band) => (
+            <li>
+              <button
+                class="option"
+                type="button"
+                data-filter-band={band.id}
+                data-min={String(band.min)}
+                data-max={band.max === null ? '' : String(band.max)}
+              >
+                {band.label}
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <ProductGrid
+      wide
+      reveal={false}
+      scene={false}
+      class="items"
+      data-catalog-grid
+    >
+      {
+        CATALOG.map((item, index) => (
+          <li
+            class="item"
+            data-item
+            data-price={String(item.price)}
+            data-name={item.name}
+            hidden={index >= PAGE_SIZE}
+          >
+            <ProductCard
+              name={item.name}
+              price={item.price}
+              photo={item.photo}
+              href="/product"
+              sizes={CATALOG_SIZES}
+              ratio={CATALOG_RATIO}
+            />
+          </li>
+        ))
+      }
+    </ProductGrid>
+
+    <p class="empty" data-catalog-empty hidden>Nothing matches this filter.</p>
+
+    <div class="progress">
+      <p class="counter" role="status" tabindex="-1" data-catalog-counter>
+        Showing <span data-catalog-shown>{String(PAGE_SIZE)}</span> of <span
+          data-catalog-total>{String(TOTAL)}</span
+        > items
+      </p>
+      <span class="track" aria-hidden="true">
+        <span class="fill" data-catalog-fill></span>
+      </span>
+      <Button class="more" data-catalog-more>Load more</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  #items {
+    margin-block-start: 40px;
+  }
+
+  #items .filter {
+    position: relative;
+    z-index: 1;
+    inline-size: 100%;
+    max-inline-size: 243px;
+    margin-inline-start: auto;
+  }
+
+  .control {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    inline-size: 100%;
+    block-size: 50px;
+    padding-inline: 18px;
+    border: 2px solid var(--color-text);
+    background-color: var(--color-bg);
+    color: inherit;
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+    transition: background-color 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  .control:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 3px;
+  }
+
+  .control:active {
+    background-color: color-mix(in srgb, var(--color-surface-muted) 85%, #000);
+    transition-duration: 90ms;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .control:hover {
+      background-color: var(--color-surface-muted);
+    }
+  }
+
+  .chevron {
+    flex: none;
+    transition: transform 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  .control[aria-expanded='true'] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .options {
+    position: absolute;
+    animation: options-in 180ms cubic-bezier(0.2, 0.8, 0.25, 1) backwards;
+    inset-inline: 0;
+    inset-block-start: calc(50px - 2px);
+    border: 2px solid var(--color-text);
+    background-color: var(--color-bg);
+  }
+
+  .option {
+    inline-size: 100%;
+    padding: 12px 18px;
+    border: 0;
+    background: none;
+    color: var(--color-text-muted);
+    font: inherit;
+    font-weight: 500;
+    text-align: start;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .option[aria-current='true'] {
+    color: var(--color-text);
+  }
+
+  .option:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: -2px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .option:hover {
+      background-color: var(--color-surface-muted);
+      color: var(--color-text);
+    }
+  }
+
+  #items .items {
+    margin-block-start: 40px;
+  }
+
+  .empty {
+    animation: options-in 180ms cubic-bezier(0.2, 0.8, 0.25, 1) backwards;
+    margin-block-start: 40px;
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  .progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    inline-size: max-content;
+    min-inline-size: var(--control-width);
+    margin-block-start: 48px;
+    margin-inline: auto;
+  }
+
+  .counter {
+    white-space: nowrap;
+  }
+
+  .counter:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 4px;
+  }
+
+  .track {
+    inline-size: 100%;
+    block-size: 2px;
+    margin-block-start: 6px;
+    background-color: var(--color-track);
+  }
+
+  .fill {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    background-color: var(--color-text);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  .more {
+    align-self: center;
+    margin-block-start: 38px;
+  }
+
+  @media (width >= 665px) {
+    .progress {
+      margin-block-start: 75px;
+    }
+  }
+
+  @keyframes options-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chevron,
+    .control,
+    .fill {
+      transition: none;
+    }
+
+    .options,
+    .empty {
+      animation: none;
+    }
+  }
+</style>
