@@ -1,32 +1,58 @@
 ---
-const YEAR = new Date().getFullYear()
+import Facebook from '@/img/icons/facebook.svg'
+import Instagram from '@/img/icons/instagram.svg'
+import Pinterest from '@/img/icons/pinterest.svg'
+import Twitter from '@/img/icons/twitter.svg'
+import { FOOTER_LINKS, SOCIALS } from '@/data/shop'
 
-const COMPANY = 'Название организации'
-const EMAIL = 'mail@example.invalid'
-const PHONE = { href: '+70000000000', label: '+7 000 000 00 00' }
+const GLYPHS = {
+  Facebook,
+  Instagram,
+  Pinterest,
+  Twitter,
+}
 ---
 
 <footer class="footer">
   <div class="container inner">
-    <section class="contacts" id="contacts" aria-labelledby="contacts-title">
-      <h2 class="title" id="contacts-title">Контакты</h2>
-      <ul class="list">
-        <li>
-          <a class="link" href={`mailto:${EMAIL}`}>{EMAIL}</a>
-        </li>
-        <li>
-          <a class="link" href={`tel:${PHONE.href}`}>{PHONE.label}</a>
-        </li>
-      </ul>
-    </section>
+    <a class="logo" href="/">Nîmes</a>
 
-    <p class="copyright">© {YEAR} {COMPANY}</p>
+    <nav aria-label="Footer">
+      <ul class="links">
+        {
+          FOOTER_LINKS.map((link) => (
+            <li>
+              <a class="link" href={link.href}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <ul class="socials" id="contacts" aria-label="Social profiles">
+      {
+        SOCIALS.map((social) => {
+          const Glyph = GLYPHS[social.name as keyof typeof GLYPHS]
+
+          return (
+            <li>
+              <a class="social" href={social.href} rel="noopener noreferrer">
+                <span class="visually-hidden">{social.name}</span>
+                <Glyph aria-hidden="true" />
+              </a>
+            </li>
+          )
+        })
+      }
+    </ul>
   </div>
 </footer>
 
 <style>
   .footer {
-    padding-block: 40px;
+    padding-block: 44px 50px;
     background-color: var(--color-surface-inverse);
     color: var(--color-text-inverse);
   }
@@ -34,53 +60,93 @@ const PHONE = { href: '+70000000000', label: '+7 000 000 00 00' }
   .inner {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    align-items: center;
+    text-align: center;
   }
 
-  .title {
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 24px;
+  .logo {
+    font-weight: 800;
+    font-size: 24px;
+    line-height: normal;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
-  .list {
+  .logo:focus-visible,
+  .link:focus-visible,
+  .social:focus-visible {
+    outline: 2px solid var(--color-text-inverse);
+    outline-offset: 4px;
+  }
+
+  .links {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-block-start: 16px;
+    flex-wrap: wrap;
+    gap: 4px var(--inline-gap);
+    justify-content: center;
+    margin-block-start: 15px;
   }
 
   .link {
-    color: var(--color-text-inverse-muted);
+    display: block;
+    padding-block: 10px;
+    font-weight: 500;
+    white-space: nowrap;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    transition: color 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+    transition: opacity 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  .socials {
+    display: flex;
+    gap: 29px;
+    align-items: center;
+    justify-content: center;
+    margin-block-start: 23px;
+  }
+
+  .social {
+    position: relative;
+    display: grid;
+    place-items: center;
+    inline-size: 20px;
+    block-size: 20px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: opacity 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  .social::after {
+    content: '';
+    position: absolute;
+    inset: -12px;
+  }
+
+  .social :global(svg) {
+    display: block;
+    max-inline-size: 100%;
+    max-block-size: 100%;
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .link:hover {
-      color: var(--color-text-inverse);
+    .link:hover,
+    .social:hover,
+    .logo:hover {
+      opacity: 0.6;
     }
   }
 
-  .link:focus-visible {
-    outline: 2px solid var(--color-text-inverse);
-    outline-offset: 3px;
-  }
-
-  .link:active {
-    color: var(--color-text-inverse);
+  .link:active,
+  .social:active,
+  .logo:active {
+    opacity: 0.45;
     transition-duration: 90ms;
   }
 
-  .copyright {
-    color: var(--color-text-inverse-muted);
-    font-size: 14px;
-    line-height: 20px;
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .link {
+    .link,
+    .social,
+    .logo {
       transition: none;
     }
   }

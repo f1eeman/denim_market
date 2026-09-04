@@ -1,29 +1,25 @@
 ---
-const LINKS = [
-  { href: '#sample', label: 'Раздел' },
-  { href: '#request', label: 'Заявка' },
-  { href: '#contacts', label: 'Контакты' },
-]
+import SearchIcon from '@/img/icons/search.svg'
+import CartIcon from '@/img/icons/cart.svg'
+import { NAV } from '@/data/shop'
 ---
 
 <header class="header">
   <div class="container row">
-    <a class="logo" href="/">Лендинг</a>
-
     <details class="menu" data-menu>
       <summary
         class="menu-toggle"
         data-menu-toggle
-        data-menu-label-open="Открыть меню"
-        data-menu-label-close="Закрыть меню"
+        data-menu-label-open="Open menu"
+        data-menu-label-close="Close menu"
       >
-        <span class="visually-hidden" data-menu-label>Открыть меню</span>
+        <span class="visually-hidden" data-menu-label>Open menu</span>
         <span class="burger" aria-hidden="true"></span>
       </summary>
-      <nav class="nav" aria-label="Разделы страницы">
+      <nav class="nav" aria-label="Sections">
         <ul class="nav-list">
           {
-            LINKS.map((link) => (
+            NAV.map((link) => (
               <li>
                 <a class="nav-link" href={link.href}>
                   {link.label}
@@ -34,67 +30,289 @@ const LINKS = [
         </ul>
       </nav>
     </details>
+
+    <a class="logo" href="/">Nîmes</a>
+
+    <div class="tools">
+      <form class="search" action="/catalog" method="get" data-search>
+        <button
+          class="icon-button"
+          type="button"
+          data-search-toggle
+          aria-expanded="false"
+          aria-controls="search-field"
+        >
+          <span class="visually-hidden">Search</span>
+          <SearchIcon width="20" height="20" aria-hidden="true" />
+        </button>
+        <input
+          class="search-field"
+          id="search-field"
+          type="search"
+          name="q"
+          placeholder="Search"
+          aria-label="Search products"
+          data-search-field
+        />
+      </form>
+
+      <button
+        class="icon-button cart"
+        type="button"
+        data-cart-toggle
+        aria-expanded="false"
+        aria-controls="cart-panel"
+      >
+        <span class="visually-hidden">Cart</span>
+        <CartIcon width="22" height="20" aria-hidden="true" />
+        <span class="badge" data-cart-count hidden>0</span>
+      </button>
+    </div>
+
+    <p class="visually-hidden" role="status" data-cart-status></p>
+
+    <div class="cart-panel" id="cart-panel" data-cart-panel hidden>
+      <p class="cart-empty" data-cart-empty>Your cart is empty.</p>
+      <ul class="cart-list" data-cart-list></ul>
+      <p class="cart-total" data-cart-total hidden></p>
+    </div>
   </div>
 </header>
-
-<script>
-  import { initMenu } from '@/scripts/menu'
-
-  initMenu()
-</script>
 
 <style>
   .header {
     position: relative;
-    z-index: 1;
-    padding-block: 16px;
+    z-index: 2;
   }
 
   .row {
-    display: flex;
-    gap: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    min-block-size: 36px;
+    min-block-size: var(--header-height);
   }
 
   .logo {
-    flex: none;
-    margin-inline-end: auto;
+    grid-column: 2;
+    font-weight: 800;
+    font-size: 24px;
+    line-height: normal;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+  }
+
+  .logo:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 4px;
+  }
+
+  .tools {
+    grid-column: 3;
+    display: flex;
+    gap: var(--inline-gap);
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .search {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    min-inline-size: 0;
+  }
+
+  .search-field {
+    inline-size: 0;
+    min-inline-size: 0;
+    padding: 0;
+    border: 0;
+    border-block-end: 2px solid transparent;
+    background-color: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: var(--text-note);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      inline-size 180ms cubic-bezier(0.2, 0.8, 0.25, 1),
+      opacity 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  .search-field::placeholder {
+    color: var(--color-text-muted);
+    opacity: 1;
+  }
+
+  .search[data-search-open] .search-field {
+    inline-size: clamp(120px, 26vw, 240px);
+    border-block-end-color: var(--color-text);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .search-field:focus-visible {
+    outline: none;
+    border-block-end-color: var(--color-text);
+  }
+
+  .icon-button {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+    transition: opacity 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+  }
+
+  .icon-button::after {
+    content: '';
+    position: absolute;
+    inset: -12px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .icon-button:hover {
+      opacity: 0.6;
+    }
+  }
+
+  .icon-button:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 6px;
+  }
+
+  .icon-button:active {
+    opacity: 0.45;
+    transition-duration: 90ms;
+  }
+
+  .badge {
+    position: absolute;
+    animation: panel-in 180ms cubic-bezier(0.2, 0.8, 0.25, 1) backwards;
+    inset-block-start: -8px;
+    inset-inline-start: 12px;
+    display: grid;
+    place-items: center;
+    min-inline-size: 16px;
+    block-size: 16px;
+    padding-inline: 4px;
+    border-radius: 8px;
+    background-color: var(--color-surface-inverse);
+    color: var(--color-text-inverse);
     font-weight: 700;
-    font-size: 20px;
-    line-height: 36px;
+    font-size: 10px;
+    line-height: 1;
+  }
+
+  .cart-panel {
+    position: absolute;
+    animation: panel-in 180ms cubic-bezier(0.2, 0.8, 0.25, 1) backwards;
+    inset-inline-end: var(--layout-gutter);
+    inset-block-start: calc(var(--header-height) - 4px);
+    z-index: 10;
+    inline-size: min(320px, calc(100vw - var(--layout-gutter) * 2));
+    padding: 20px;
+    background-color: var(--color-surface-muted);
+    font-size: var(--text-note);
+  }
+
+  .cart-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .cart-list:empty {
+    display: none;
+  }
+
+  .cart-line {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+    align-items: baseline;
+  }
+
+  .cart-line-name {
+    grid-column: 1;
+    font-weight: 500;
+  }
+
+  .cart-line-price {
+    grid-column: 2;
+    grid-row: 1;
+    font-weight: 700;
+    text-align: end;
+  }
+
+  .cart-remove {
+    grid-column: 1;
+    justify-self: start;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-text-muted);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .cart-remove:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 2px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cart-remove:hover {
+      color: var(--color-text);
+    }
+  }
+
+  .cart-total {
+    display: flex;
+    justify-content: space-between;
+    margin-block-start: 16px;
+    padding-block-start: 12px;
+    border-block-start: 2px solid var(--color-track);
+    font-weight: 700;
   }
 
   .nav-link {
     display: block;
-    font-size: 14px;
+    font-weight: 500;
     white-space: nowrap;
-    user-select: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    user-select: none;
     transition: color 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
   }
 
-  @media (width < 1024px) {
+  @media (width < 665px) {
     .menu {
-      flex: none;
+      grid-column: 1;
+      justify-self: start;
     }
 
     .menu-toggle {
       position: relative;
       display: grid;
       place-content: center;
-      inline-size: 36px;
-      block-size: 36px;
-      border: 1px solid var(--color-border-chip);
-      border-radius: var(--radius-control);
-      background-color: var(--color-surface-chip);
+      inline-size: 24px;
+      block-size: 20px;
       list-style: none;
       cursor: pointer;
-      user-select: none;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
-      transition: background-color 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+      user-select: none;
     }
 
     .menu-toggle::-webkit-details-marker {
@@ -104,33 +322,21 @@ const LINKS = [
     .menu-toggle::after {
       content: '';
       position: absolute;
-      inset: -4px;
+      inset: -12px;
     }
 
     .menu-toggle:focus-visible {
-      outline: 2px solid var(--color-accent);
-      outline-offset: 3px;
-    }
-
-    .menu-toggle:active {
-      background-color: color-mix(
-        in srgb,
-        var(--color-surface-chip) 86%,
-        var(--color-text)
-      );
-      transition-duration: 90ms;
+      outline: 2px solid var(--color-text);
+      outline-offset: 6px;
     }
 
     .burger,
     .burger::before,
     .burger::after {
-      inline-size: 20px;
+      inline-size: 24px;
       block-size: 2px;
-      border-radius: 1px;
       background-color: var(--color-text);
-      transition:
-        transform 180ms cubic-bezier(0.2, 0.8, 0.25, 1),
-        background-color 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
+      transition: transform 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
     }
 
     .burger {
@@ -145,25 +351,11 @@ const LINKS = [
     }
 
     .burger::before {
-      inset-block-start: -6px;
+      inset-block-start: -7px;
     }
 
     .burger::after {
-      inset-block-start: 6px;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      .menu-toggle:hover {
-        background-color: color-mix(
-          in srgb,
-          var(--color-surface-chip) 92%,
-          var(--color-text)
-        );
-      }
-
-      .menu[open] .menu-toggle:hover .burger {
-        background-color: transparent;
-      }
+      inset-block-start: 7px;
     }
 
     .menu[open] .burger {
@@ -171,11 +363,11 @@ const LINKS = [
     }
 
     .menu[open] .burger::before {
-      transform: translateY(6px) rotate(45deg);
+      transform: translateY(7px) rotate(45deg);
     }
 
     .menu[open] .burger::after {
-      transform: translateY(-6px) rotate(-45deg);
+      transform: translateY(-7px) rotate(-45deg);
     }
 
     .menu::details-content {
@@ -188,8 +380,6 @@ const LINKS = [
       inset-block-start: 100%;
       z-index: 10;
       block-size: 0;
-      border-end-end-radius: var(--radius-tab);
-      border-end-start-radius: var(--radius-tab);
       background-color: var(--color-surface-inverse);
       overflow: hidden;
       transition: block-size 180ms cubic-bezier(0.2, 0.8, 0.25, 1);
@@ -201,33 +391,28 @@ const LINKS = [
 
     .nav-list {
       max-block-size: calc(100dvh - var(--header-height));
-      padding: 8px 16px 16px;
+      padding: 8px var(--layout-gutter) 16px;
       overflow-y: auto;
     }
 
     .nav-link {
-      padding-block: 10px;
-      padding-inline: 8px;
-      border-radius: var(--radius-control);
-      color: var(--color-text-inverse-muted);
-      transition-property: color, background-color;
+      padding-block: 12px;
+      color: var(--color-text-inverse);
     }
 
-    @media (hover: hover) and (pointer: fine) {
-      .nav-link:hover {
-        color: var(--color-text-inverse);
-      }
+    .nav-link:focus-visible {
+      outline: 2px solid var(--color-text-inverse);
+      outline-offset: 2px;
     }
 
     .nav-link:active {
-      background-color: var(--color-surface-glass);
-      color: var(--color-text-inverse);
+      background-color: rgb(255 255 255 / 5%);
     }
   }
 
-  @media (width >= 1024px) {
+  @media (width >= 665px) {
     .menu {
-      flex: 1;
+      grid-column: 1;
     }
 
     .menu-toggle {
@@ -241,14 +426,12 @@ const LINKS = [
 
     .nav-list {
       display: flex;
-      gap: 32px;
-      justify-content: flex-end;
+      gap: var(--inline-gap);
     }
 
     .nav-link {
       position: relative;
-      color: var(--color-text-muted);
-      transition-property: color, transform;
+      font-size: var(--text-note);
     }
 
     .nav-link::after {
@@ -257,7 +440,6 @@ const LINKS = [
       inset-block-end: -4px;
       inset-inline: 0;
       block-size: 2px;
-      border-radius: 1px;
       background-color: currentcolor;
       transform: scaleX(0);
       transform-origin: right;
@@ -265,20 +447,15 @@ const LINKS = [
     }
 
     .nav-link:focus-visible {
-      outline: 2px solid var(--color-accent);
+      outline: 2px solid var(--color-text);
       outline-offset: 4px;
     }
 
     .nav-link:active {
-      color: var(--color-text);
       transform: scale(0.97);
     }
 
     @media (hover: hover) and (pointer: fine) {
-      .nav-link:hover {
-        color: var(--color-text);
-      }
-
       .nav-link:hover::after {
         transform: scaleX(1);
         transform-origin: left;
@@ -286,15 +463,27 @@ const LINKS = [
     }
   }
 
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .cart-panel,
+    .badge {
+      animation: none;
+    }
+
     .nav,
     .nav-link,
     .nav-link::after,
-    .menu-toggle,
     .burger,
     .burger::before,
     .burger::after,
-    .menu::details-content {
+    .menu::details-content,
+    .icon-button,
+    .search-field {
       transition: none;
     }
 
